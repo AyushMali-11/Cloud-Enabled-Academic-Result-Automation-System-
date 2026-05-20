@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4"><i class="bi bi-person-badge text-info"></i> Student Dashboard</h2>
+
+    <!-- Student Profile Card -->
+    <div class="card shadow-sm mb-4 border-info">
+        <div class="card-body">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h4>{{ profile.full_name }}</h4>
+                    <p class="mb-1"><strong>Roll Number:</strong> {{ profile.roll_number }}</p>
+                    <p class="mb-1"><strong>Class:</strong> {{ profile.class_name }}</p>
+                    <p class="mb-0 text-muted">{{ profile.email }}</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a href="{{ url_for('student.download_pdf') }}" class="btn btn-danger btn-lg">
+                        <i class="bi bi-file-pdf"></i> Download PDF Report
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Table -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-info text-dark">
+            <i class="bi bi-trophy"></i> Your Results (Auto-Generated)
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Exam</th>
+                        <th>Subject</th>
+                        <th>Marks</th>
+                        <th>Max</th>
+                        <th>Percentage</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in results %}
+                    <tr>
+                        <td>{{ r.exam_name }}</td>
+                        <td>{{ r.subject_name }}</td>
+                        <td>{{ r.total_marks }}</td>
+                        <td>{{ r.max_marks }}</td>
+                        <td>
+                            <div class="progress" style="min-width: 80px;">
+                                <div class="progress-bar bg-success" style="width: {{ r.percentage }}%">
+                                    {{ r.percentage }}%
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge grade-badge grade-{{ r.grade | replace('+','plus') }}">{{ r.grade }}</span></td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="6" class="text-muted">No results yet. Ask your teacher to upload marks.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Raw Marks -->
+    <div class="card shadow-sm">
+        <div class="card-header">
+            <i class="bi bi-pencil-square"></i> Raw Marks
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-sm">
+                <thead>
+                    <tr><th>Exam</th><th>Subject</th><th>Marks Obtained</th></tr>
+                </thead>
+                <tbody>
+                    {% for m in marks %}
+                    <tr>
+                        <td>{{ m.exam_name }}</td>
+                        <td>{{ m.subject_name }}</td>
+                        <td>{{ m.marks_obtained }}</td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="3" class="text-muted">No marks recorded.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

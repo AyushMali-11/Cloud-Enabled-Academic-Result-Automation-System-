@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Teacher Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4"><i class="bi bi-person-workspace text-success"></i> Teacher Dashboard</h2>
+
+    <div class="row g-4">
+        <!-- Create Exam -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <i class="bi bi-calendar-plus"></i> Create Exam
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('teacher.create_exam') }}">
+                        <div class="mb-3">
+                            <label class="form-label">Exam Name</label>
+                            <input type="text" name="exam_name" class="form-control" placeholder="Mid-Term Exam" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Exam Date</label>
+                            <input type="date" name="exam_date" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Subject</label>
+                            <select name="subject_id" class="form-select" required>
+                                <option value="">Select subject...</option>
+                                {% for s in subjects %}
+                                <option value="{{ s.id }}">{{ s.subject_code }} - {{ s.subject_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Create Exam</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- CSV Upload -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-primary">
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-upload"></i> Upload Marks (CSV)
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('teacher.upload_csv') }}" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label">Select Exam</label>
+                            <select name="exam_id" class="form-select" required>
+                                <option value="">Choose exam...</option>
+                                {% for e in exams %}
+                                <option value="{{ e.id }}">{{ e.exam_name }} - {{ e.subject_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">CSV File</label>
+                            <input type="file" name="csv_file" class="form-control" accept=".csv" required>
+                            <small class="text-muted">Format: roll_number, marks_obtained</small>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-cloud-upload"></i> Upload & Generate Results
+                        </button>
+                    </form>
+                    <p class="small text-muted mt-2 mb-0">
+                        Sample: <code>uploads/sample_marks.csv</code>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Marks Summary -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <i class="bi bi-bar-chart"></i> Marks Summary
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for m in marks_summary %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span>{{ m.exam_name }}</span>
+                            <span class="badge bg-primary">{{ m.mark_count }} marks</span>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item text-muted">No marks uploaded yet.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exams Table -->
+    <div class="card shadow-sm mt-4">
+        <div class="card-header">
+            <i class="bi bi-file-earmark-text"></i> Your Exams
+        </div>
+        <div class="card-body table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Exam</th>
+                        <th>Subject</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in exams %}
+                    <tr>
+                        <td>{{ e.exam_name }}</td>
+                        <td>{{ e.subject_code }} - {{ e.subject_name }}</td>
+                        <td>{{ e.exam_date or '—' }}</td>
+                        <td>
+                            <a href="{{ url_for('teacher.generate_results', exam_id=e.id) }}"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-calculator"></i> Generate Results
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="text-muted">No exams created yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

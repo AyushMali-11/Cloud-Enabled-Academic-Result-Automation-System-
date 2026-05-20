@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4"><i class="bi bi-speedometer2 text-primary"></i> Admin Dashboard</h2>
+
+    <!-- Statistics cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="card stat-card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-people fs-2 text-primary"></i>
+                    <h3 class="mt-2 mb-0">{{ stats.users }}</h3>
+                    <small class="text-muted">Users</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="card stat-card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-badge fs-2 text-success"></i>
+                    <h3 class="mt-2 mb-0">{{ stats.students }}</h3>
+                    <small class="text-muted">Students</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="card stat-card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-person-workspace fs-2 text-warning"></i>
+                    <h3 class="mt-2 mb-0">{{ stats.teachers }}</h3>
+                    <small class="text-muted">Teachers</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="card stat-card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-book fs-2 text-info"></i>
+                    <h3 class="mt-2 mb-0">{{ stats.subjects }}</h3>
+                    <small class="text-muted">Subjects</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="card stat-card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-file-earmark-text fs-2 text-secondary"></i>
+                    <h3 class="mt-2 mb-0">{{ stats.exams }}</h3>
+                    <small class="text-muted">Exams</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4 col-lg-2">
+            <div class="card stat-card border-0 shadow-sm">
+                <div class="card-body text-center">
+                    <i class="bi bi-trophy fs-2 text-danger"></i>
+                    <h3 class="mt-2 mb-0">{{ stats.results }}</h3>
+                    <small class="text-muted">Results</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Add Subject Form -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <i class="bi bi-plus-circle"></i> Add Subject
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('admin.add_subject') }}">
+                        <div class="mb-3">
+                            <label class="form-label">Subject Code</label>
+                            <input type="text" name="subject_code" class="form-control" placeholder="CS101" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Subject Name</label>
+                            <input type="text" name="subject_name" class="form-control" placeholder="Programming" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Max Marks</label>
+                            <input type="number" name="max_marks" class="form-control" value="100" min="1">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Add Subject</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subjects List -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <i class="bi bi-book"></i> Subjects
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Code</th>
+                                <th>Name</th>
+                                <th>Max Marks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in subjects %}
+                            <tr>
+                                <td><span class="badge bg-primary">{{ s.subject_code }}</span></td>
+                                <td>{{ s.subject_name }}</td>
+                                <td>{{ s.max_marks }}</td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="3" class="text-muted">No subjects yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Students: Add + List -->
+    <div class="row g-4 mt-2">
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-success">
+                <div class="card-header bg-success text-white">
+                    <i class="bi bi-person-plus"></i> Add Student
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('admin.add_student') }}">
+                        <div class="mb-2">
+                            <label class="form-label">Username *</label>
+                            <input type="text" name="username" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Password</label>
+                            <input type="text" name="password" class="form-control form-control-sm"
+                                   placeholder="Default: password123">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Roll Number *</label>
+                            <input type="text" name="roll_number" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" name="full_name" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Class</label>
+                            <input type="text" name="class_name" class="form-control form-control-sm"
+                                   placeholder="B.Tech CS - Year 2">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control form-control-sm">
+                        </div>
+                        <button type="submit" class="btn btn-success btn-sm w-100">Add Student</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <i class="bi bi-person-badge"></i> Students ({{ students|length }})
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table table-sm table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Class</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for st in students %}
+                            <tr>
+                                <td><span class="badge bg-secondary">{{ st.roll_number }}</span></td>
+                                <td>{{ st.full_name }}</td>
+                                <td>{{ st.username }}</td>
+                                <td>{{ st.class_name or '—' }}</td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('admin.delete_student', student_id=st.id) }}"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Delete student {{ st.full_name }}? This cannot be undone.');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="5" class="text-muted">No students yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teachers: Add + List -->
+    <div class="row g-4 mt-2">
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-warning">
+                <div class="card-header bg-warning text-dark">
+                    <i class="bi bi-person-plus"></i> Add Teacher
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('admin.add_teacher') }}">
+                        <div class="mb-2">
+                            <label class="form-label">Username *</label>
+                            <input type="text" name="username" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Password</label>
+                            <input type="text" name="password" class="form-control form-control-sm"
+                                   placeholder="Default: password123">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Full Name *</label>
+                            <input type="text" name="full_name" class="form-control form-control-sm" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Department</label>
+                            <input type="text" name="department" class="form-control form-control-sm"
+                                   placeholder="Computer Science">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control form-control-sm">
+                        </div>
+                        <button type="submit" class="btn btn-warning btn-sm w-100">Add Teacher</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header">
+                    <i class="bi bi-person-workspace"></i> Teachers ({{ teachers|length }})
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table table-sm table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Username</th>
+                                <th>Department</th>
+                                <th>Email</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for t in teachers %}
+                            <tr>
+                                <td>{{ t.full_name }}</td>
+                                <td>{{ t.username }}</td>
+                                <td>{{ t.department or '—' }}</td>
+                                <td>{{ t.email or '—' }}</td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('admin.delete_teacher', teacher_id=t.id) }}"
+                                          class="d-inline"
+                                          onsubmit="return confirm('Delete teacher {{ t.full_name }}? This cannot be undone.');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="5" class="text-muted">No teachers yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
