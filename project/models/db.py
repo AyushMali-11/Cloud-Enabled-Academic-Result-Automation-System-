@@ -3,9 +3,8 @@ Database connection helper.
 Provides a simple function to get a PostgreSQL connection.
 """
 
-import psycopg2
-from psycopg2 import Error
-from psycopg2.extras import RealDictCursor
+import psycopg
+from psycopg.rows import dict_row
 from config import DB_CONFIG
 
 
