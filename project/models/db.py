@@ -14,9 +14,9 @@ def get_db_connection():
     Returns None if connection fails.
     """
     try:
-        connection = psycopg2.connect(**DB_CONFIG)
+        connection = psycopg.connect(**DB_CONFIG)
         return connection
-    except Error as e:
+    except Exception as e:
         print(f"Database connection error: {e}")
         return None
 
@@ -60,7 +60,7 @@ def execute_query(query, params=None, fetch_one=False, fetch_all=False):
         cursor.close()
         conn.close()
         return result
-    except Error as e:
+    except Exception as e:
         print(f"Query error: {e}")
         if conn:
             conn.rollback()
