@@ -59,4 +59,6 @@ if __name__ == '__main__':
     print("Academic Result Automation System")
     print("Open: http://127.0.0.1:5000")
     print("=" * 50)
-    app.run(debug=True, host='127.0.0.1', port=5000)
+
+    import os
+    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
