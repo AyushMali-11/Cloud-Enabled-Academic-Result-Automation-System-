@@ -1,6 +1,6 @@
 """
 Configuration settings for the Flask application.
-Change these values to match your local MySQL setup.
+Change these values to match your local PostgreSQL setup.
 """
 
 import os
@@ -8,12 +8,13 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# MySQL database connection settings
+# PostgreSQL database connection settings
 DB_CONFIG = {
     'host': os.getenv('DB_HOST', 'localhost'),
-    'user': os.getenv('DB_USER', 'root'),
-    'password': os.getenv('DB_PASSWORD', 'Ayush11#'),
-    'database': os.getenv('DB_NAME', 'academic_results'),
+    'port': int(os.getenv('DB_PORT', '5432')),
+    'user': os.getenv('DB_USER', 'postgres'),
+    'password': os.getenv('DB_PASSWORD', ''),
+    'dbname': os.getenv('DB_NAME', 'academic_results'),
 }
 
 # Flask secret key for sessions (change in production)

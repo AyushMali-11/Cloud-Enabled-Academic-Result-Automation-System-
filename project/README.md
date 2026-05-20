@@ -7,7 +7,7 @@ A beginner-friendly full-stack web application for managing academic results wit
 | Layer      | Technology        |
 |-----------|-------------------|
 | Backend   | Python Flask      |
-| Database  | MySQL             |
+| Database  | PostgreSQL        |
 | Frontend  | HTML, CSS, Bootstrap 5, JavaScript |
 | PDF       | ReportLab         |
 
@@ -49,7 +49,7 @@ project/
 ### Prerequisites
 
 - Python 3.9+
-- MySQL Server (e.g. MySQL 8.0 or XAMPP/WAMP)
+- PostgreSQL Server (v14+ recommended)
 - pip
 
 ### Step 1: Clone / Open Project
@@ -76,9 +76,9 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Step 4: Configure MySQL
+### Step 4: Configure PostgreSQL
 
-1. Start MySQL service.
+1. Start PostgreSQL service.
 2. Copy environment file and edit your password:
 
 ```bash
@@ -89,21 +89,22 @@ Edit `.env`:
 
 ```
 DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_mysql_password
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=your_postgres_password
 DB_NAME=academic_results
 SECRET_KEY=any-random-secret-string
 ```
 
 ### Step 5: Create Database
 
-**Option A – MySQL command line:**
+**Option A – PostgreSQL command line:**
 
 ```bash
-mysql -u root -p < database/schema.sql
+psql -U postgres -d postgres -f database/schema.sql
 ```
 
-**Option B – MySQL Workbench:**
+**Option B – pgAdmin / SQL client:**
 
 Open `database/schema.sql` and run the script.
 
@@ -163,7 +164,7 @@ After upload, results are **automatically generated** (percentage + grade).
 |--------|---------|
 | `app.py` | Starts Flask, registers blueprints |
 | `config.py` | DB credentials from `.env` |
-| `models/db.py` | MySQL connection helper |
+| `models/db.py` | PostgreSQL connection helper |
 | `models/user.py` | Flask-Login user object |
 | `routes/auth.py` | Login, logout, role redirect |
 | `routes/admin.py` | Admin-only pages |
@@ -177,7 +178,7 @@ After upload, results are **automatically generated** (percentage + grade).
 
 | Problem | Solution |
 |---------|----------|
-| Database connection error | Check MySQL is running and `.env` credentials |
+| Database connection error | Check PostgreSQL is running and `.env` credentials |
 | Login fails | Run `python init_db.py` again to reset passwords |
 | CSV upload fails | Ensure roll numbers exist in `students` table |
 | PDF download empty | Upload marks and generate results first |
@@ -187,7 +188,7 @@ After upload, results are **automatically generated** (percentage + grade).
 This project is designed to run **locally first**. For cloud deployment later, consider:
 
 - Host Flask on **PythonAnywhere**, **Render**, or **AWS Elastic Beanstalk**
-- Use **Amazon RDS** or **PlanetScale** for managed MySQL
+- Use **Amazon RDS (PostgreSQL)**, **Neon**, or **Supabase** for managed PostgreSQL
 - Store uploads in **S3** instead of local `uploads/` folder
 
 ---

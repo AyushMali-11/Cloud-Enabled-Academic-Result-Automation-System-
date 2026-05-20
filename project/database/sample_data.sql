@@ -1,14 +1,10 @@
 -- ============================================================
 -- Sample Dummy Data for Testing
 -- Password for all users: password123
--- (hashed with Werkzeug scrypt)
+-- (hashed with Werkzeug)
 -- ============================================================
 
-USE academic_results;
-
--- Default password hash for "password123"
--- Generated using: from werkzeug.security import generate_password_hash
-SET @pwd = 'scrypt:32768:8:1$placeholder$placeholder';
+\connect academic_results;
 
 -- Insert users (passwords set via app on first run - see README)
 -- For sample data we use a known hash for password123

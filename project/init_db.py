@@ -126,7 +126,7 @@ def init_subjects_exams():
 if __name__ == '__main__':
     conn = get_db_connection()
     if not conn:
-        print("ERROR: Cannot connect to MySQL. Check config.py and .env settings.")
+        print("ERROR: Cannot connect to PostgreSQL. Check config.py and .env settings.")
         exit(1)
     conn.close()
 

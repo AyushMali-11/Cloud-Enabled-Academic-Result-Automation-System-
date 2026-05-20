@@ -43,11 +43,11 @@ def process_marks_for_exam(exam_id):
         execute_query(
             """INSERT INTO results (student_id, exam_id, total_marks, max_marks, percentage, grade)
                VALUES (%s, %s, %s, %s, %s, %s)
-               ON DUPLICATE KEY UPDATE
-               total_marks = VALUES(total_marks),
-               max_marks = VALUES(max_marks),
-               percentage = VALUES(percentage),
-               grade = VALUES(grade),
+               ON CONFLICT (student_id, exam_id) DO UPDATE SET
+               total_marks = EXCLUDED.total_marks,
+               max_marks = EXCLUDED.max_marks,
+               percentage = EXCLUDED.percentage,
+               grade = EXCLUDED.grade,
                generated_at = CURRENT_TIMESTAMP""",
             (mark['student_id'], exam_id, obtained, max_marks, percentage, grade)
         )

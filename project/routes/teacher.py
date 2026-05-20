@@ -161,7 +161,8 @@ def upload_csv():
                 execute_query(
                     """INSERT INTO marks (student_id, exam_id, marks_obtained)
                        VALUES (%s, %s, %s)
-                       ON DUPLICATE KEY UPDATE marks_obtained = VALUES(marks_obtained)""",
+                       ON CONFLICT (student_id, exam_id)
+                       DO UPDATE SET marks_obtained = EXCLUDED.marks_obtained""",
                     (student['id'], exam_id, marks_obtained)
                 )
                 success_count += 1
