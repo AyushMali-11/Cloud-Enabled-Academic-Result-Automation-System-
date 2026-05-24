@@ -15,6 +15,7 @@ auth_bp = Blueprint('auth', __name__)
 @auth_bp.route('/')
 def index():
     """Home page - redirect to login or dashboard based on role."""
+
     if current_user.is_authenticated:
         return redirect(_dashboard_for_role(current_user.role))
 
@@ -33,19 +34,25 @@ def login():
         username = request.form.get('username', '').strip()
         password = request.form.get('password', '')
 
+        from models.db import get_db_connection
+
+        test_conn = get_db_connection()
+        if not test_conn:
+            flash(
+                'Cannot connect to database. Check DATABASE_URL / .env settings.',
+                'danger'
+            )
+            return render_template('login.html')
+        test_conn.close()
+
         user = User.get_by_username(username)
 
-        # IMPORTANT FIX
-        if user and check_password_hash(user.password, password):
-
+        if user and check_password_hash(user.password_hash, password):
             login_user(user)
-
             flash('Login successful!', 'success')
-
             return redirect(_dashboard_for_role(user.role))
 
-        else:
-            flash('Invalid username or password.', 'danger')
+        flash('Invalid username or password.', 'danger')
 
     return render_template('login.html')
 
@@ -75,7 +82,7 @@ def change_password():
 
         user = User.get_by_id(current_user.id)
 
-        if not user or not check_password_hash(user.password, current_password):
+        if not user or not check_password_hash(user.password_hash, current_password):
             flash('Current password is incorrect.', 'danger')
             return redirect(url_for('auth.change_password'))
 
